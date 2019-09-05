@@ -3,13 +3,11 @@ package com.revature.charityapp.util;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Scanner;
 
 public class ConnectionUtil {
-
-	public static void main(String[] args) {
-		getConnection();
-	}
 
 	public static Connection getConnection() {
 		String driverClassName = "com.mysql.cj.jdbc.Driver";
@@ -48,4 +46,30 @@ public class ConnectionUtil {
 
 	}
 
+	public static void close(Connection con, PreparedStatement pst, ResultSet rs) {
+		try {
+			if (pst != null)
+				pst.close();
+			if (con != null)
+				con.close();
+			if (rs != null)
+				rs.close();
+		} catch (Exception e) {
+
+		}
+
+	}
+
+	public static void close(Connection con, Scanner scn) {
+		try {
+			if (scn != null)
+				scn.close();
+			if (con != null)
+				con.close();
+
+		} catch (Exception e) {
+
+		}
+
+	}
 }

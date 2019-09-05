@@ -1,4 +1,4 @@
-package com.revature.charity_app;
+package com.revature.charityapp;
 
 import static org.junit.Assert.assertNotNull;
 
@@ -8,14 +8,11 @@ import org.junit.Test;
 
 import com.revature.charityapp.util.ConnectionUtil;
 
-
 public class ConnectionUtilTest {
 	@Test
-	public void connectionTest()
-	{
-		Connection con=ConnectionUtil.getConnection();
+	public void connectionTest() {
+		Connection con = ConnectionUtil.getConnection();
 		assertNotNull(con);
 	}
-
 
 }
