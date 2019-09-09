@@ -6,7 +6,7 @@ import com.revature.charityapp.ui.Signin;
 
 public class UserValidator {
 	public void validateBeforeRegistration(User user) throws ValidatorException {
-		
+
 		rejectIfInvalidNumber(user.getId(), "Invalid id");
 
 		rejectIfInvalidString(user.getName(), "Invalid Name");

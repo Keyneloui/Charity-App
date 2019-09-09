@@ -1,4 +1,4 @@
-package com.revature.charityapp.ui;
+package com.revature.charityapp.util;
 
 import java.util.List;
 
@@ -12,11 +12,12 @@ public class DisplayUtil {
 
 	public static void display(List<DonationRequest> list) {
 		StringBuilder content = new StringBuilder();
-		content.append("Request Id \t Request Type \t Request Amount\t\n");
+		content.append("Request Id\tRequest Type\tRequest Amount\n");
 		for (DonationRequest dr : list) {
-			content.append(dr.getRequestId()).append("\t");
-			content.append(dr.getRequestType()).append("\t");
-			content.append(dr.getRequestAmount()).append("\t");
+			content.append(dr.getRequestId()).append("\t\t");
+			content.append(dr.getRequestType()).append("\t\t");
+			content.append(dr.getRequestAmount()).append("\t\t");
+		
 			content.append("\n");
 		}
 

@@ -17,7 +17,7 @@ public interface DonationDAO {
 
 	DonationRequest findByRequestType(String requestType) throws DBException;
 
-	DonationRequest request(String requestType) throws SQLException;
+	DonationRequest request(String requestType) throws DBException;
 
 	void deleteDonation(DonationRequest drr) throws DBException;
 

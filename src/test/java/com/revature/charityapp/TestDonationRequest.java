@@ -13,21 +13,18 @@ public class TestDonationRequest {
 
 	@Test
 	public void DonationRequesttest() throws DBException {
-		
-			DonationRequest request = new DonationRequest();
 
-			request.setRequestType("FOOD");
-			
-			request.setRequestAmount(500.40);
-		
-			request.setRequestId(1);
+		DonationRequest request = new DonationRequest();
 
-			DonationDAO dao=new DonationDAOImpl();
-			List<DonationRequest> list = dao.findAll();
+		request.setRequestType("FOOD");
 
-	
+		request.setRequestAmount(500.40);
 
-		
+		request.setRequestId(1);
+
+		DonationDAO dao = new DonationDAOImpl();
+		List<DonationRequest> list = dao.findAll();
+
 	}
 
 }

@@ -7,7 +7,6 @@ public class DonationRequest {
 	private String requestType;
 	private Double requestAmount;
 	private Date date;
-	
 
 	public int getRequestId() {
 		return id;
@@ -32,6 +31,7 @@ public class DonationRequest {
 	public void setRequestAmount(Double requestAmount) {
 		this.requestAmount = requestAmount;
 	}
+
 	public Date getDate() {
 		return date;
 	}
@@ -40,11 +40,10 @@ public class DonationRequest {
 		this.date = date;
 	}
 
-	
 	@Override
 	public String toString() {
 		return "DonationRequest :Request Id=" + id + ", Request Type=" + requestType + ", Request Amount="
-				+ requestAmount + "Date="+date+".";
+				+ requestAmount + "Date=" + date + ".";
 	}
 
 }

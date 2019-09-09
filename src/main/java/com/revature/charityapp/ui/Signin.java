@@ -18,7 +18,7 @@ public class Signin {
 	public static void main(String[] args) {
 		try {
 			welcomePage();
-		} catch (DBException | ValidatorException | SQLException |InputMismatchException e) {
+		} catch (DBException | ValidatorException | SQLException | InputMismatchException e) {
 			System.out.println(e.getMessage());
 		}
 	}
@@ -41,17 +41,17 @@ public class Signin {
 			switch (val) {
 			case 1:
 				User user = new User();
-				System.out.println("create a donor id\nYour donor id must be in numbers");
+				System.out.println("create a donor id\nYour donor id must be in numbers and it shouldn't be zero");
 				int donorId = sc.nextInt();
 
 				System.out.println("Enter your name:");
 				String name = sc.next();
 				name(name);
-				
+
 				System.out.println("Enter your email:");
 				String emailId1 = sc.next();
 				mail(emailId1);
-				
+
 				System.out.println("Setup a password:");
 				String setpassword = sc.next();
 
@@ -101,7 +101,7 @@ public class Signin {
 				System.out.println("Enter your email:");
 				String emailIds = sc.next();
 				mail(emailIds);
-			
+
 				System.out.println("Enter the password:");
 				String passwords = sc.next();
 				UserDAO ob1 = new UserDAOImpl();
@@ -121,7 +121,7 @@ public class Signin {
 
 			}
 		} catch (Exception e) {
-			
+
 			System.out.println(e.getMessage());
 			welcomePage();
 		}
@@ -141,7 +141,7 @@ public class Signin {
 		String email = emailIds;
 		do {
 			if (status != null && !status.equals("")) {
-				System.out.println("Enter your email:");
+				System.out.println("Enter your  registered email:");
 				email = sc.next();
 			}
 			Matcher matcher = pattern.matcher(email);

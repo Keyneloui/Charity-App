@@ -11,6 +11,7 @@ import com.revature.charityapp.exception.DBException;
 import com.revature.charityapp.exception.ValidatorException;
 import com.revature.charityapp.model.DonationRequest;
 import com.revature.charityapp.util.ConnectionUtil;
+import com.revature.charityapp.util.DisplayUtil;
 
 public class AdminFunction {
 	/**
@@ -67,7 +68,6 @@ public class AdminFunction {
 	public static void donationRequest(Scanner scn) throws DBException
 
 	{
-		
 
 		DonationDAO dao = new DonationDAOImpl();
 		try {
@@ -108,7 +108,7 @@ public class AdminFunction {
 		} catch (DBException e) {
 			System.out.println(e.getMessage());
 			throw new DBException("Unable to process the request", e);
-		} 
+		}
 	}
 
 }

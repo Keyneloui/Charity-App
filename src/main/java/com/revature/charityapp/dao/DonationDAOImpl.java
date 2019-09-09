@@ -49,13 +49,13 @@ public class DonationDAOImpl implements DonationDAO {
 			Integer requestId = rs.getInt("id");
 			String requestType = rs.getString("request_type");
 			double requestAmount = rs.getDouble("request_amount");
-			Date date=rs.getDate("request_date");
-			
+			Date date = rs.getDate("request_date");
+
 			dr.setRequestId(requestId);
 			dr.setRequestType(requestType);
 			dr.setRequestAmount(requestAmount);
 			dr.setDate(date);
-			
+
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 			throw new DBException("Unable to display the list", e);
@@ -116,6 +116,7 @@ public class DonationDAOImpl implements DonationDAO {
 			ConnectionUtil.close(con, pst);
 		}
 	}
+
 	public void updateDonationss(DonationRequest drr) throws DBException {
 		Connection con = null;
 		PreparedStatement pst = null;
@@ -135,7 +136,6 @@ public class DonationDAOImpl implements DonationDAO {
 		}
 	}
 
-
 	/**
 	 * Method to find the donation request
 	 * 
@@ -148,7 +148,7 @@ public class DonationDAOImpl implements DonationDAO {
 		DonationRequest dr = null;
 		try {
 			con = ConnectionUtil.getConnection();
-			String sql = "select id,request_type,request_amount from donation_request where request_type= ?";
+			String sql = "select id,request_type,request_amount,request_date from donation_request where request_type= ?";
 			pst = con.prepareStatement(sql);
 			pst.setString(1, requestType);
 			ResultSet rs = pst.executeQuery();
@@ -159,7 +159,7 @@ public class DonationDAOImpl implements DonationDAO {
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 			throw new DBException("Invalid Request", e);
-			
+
 		} finally {
 			ConnectionUtil.close(con, pst);
 		}
@@ -182,7 +182,8 @@ public class DonationDAOImpl implements DonationDAO {
 		return dr;
 
 	}
-	public DonationRequest request(String requestType) throws SQLException {
+
+	public DonationRequest request(String requestType) throws DBException {
 		Connection con = null;
 		PreparedStatement pst = null;
 		ResultSet rs = null;
@@ -192,23 +193,22 @@ public class DonationDAOImpl implements DonationDAO {
 			con = ConnectionUtil.getConnection();
 			String sql = "select * from donation_request where request_type=?";
 			pst = con.prepareStatement(sql);
-			pst.setString(1,requestType);
-			//pst.setString(2, password);
+			pst.setString(1, requestType);
+			// pst.setString(2, password);
 			rs = pst.executeQuery();
 			if (rs.next()) {
 				dr = new DonationRequest();
 				dr.setRequestType(rs.getString("request_type"));
 			}
 		} catch (SQLException e) {
-			//e.printStackTrace();
-			throw new SQLException("Invlid req", e);
+			// e.printStackTrace();
+			throw new DBException("Invlid req", e);
 		} finally {
 			ConnectionUtil.close(con, pst, rs);
 		}
 
 		return dr;
 	}
-	
 
 	public void deleteDonation(DonationRequest drr) throws DBException {
 		Connection con = null;
@@ -218,7 +218,7 @@ public class DonationDAOImpl implements DonationDAO {
 			String sql = "delete from donation_request where request_type=?";
 			pst = con.prepareStatement(sql);
 			pst.setString(1, drr.getRequestType());
-			//pst.setDouble(1, drr.getRequestAmount());
+			// pst.setDouble(1, drr.getRequestAmount());
 			pst.executeUpdate();
 			// System.out.println("No of rows updated:" + rows);
 		} catch (SQLException e) {
@@ -229,7 +229,4 @@ public class DonationDAOImpl implements DonationDAO {
 		}
 	}
 
-	}
-
-
-
+}

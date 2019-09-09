@@ -46,6 +46,34 @@ public class UserDAOImpl implements UserDAO {
 
 		return user;
 	}
+	public User donor(int id) throws DBException {
+		Connection con = null;
+		PreparedStatement pst = null;
+		ResultSet rs = null;
+		User user = null;
+
+		try {
+			con = ConnectionUtil.getConnection();
+			String sql = "select donor_id,name,email_id from donor where donor_id=?";
+			pst = con.prepareStatement(sql);
+			pst.setInt(1, id);
+			rs = pst.executeQuery();
+			if (rs.next()) {
+				user = new User();
+				user.setId(rs.getInt("donor_id"));
+				user.setName(rs.getString("name"));
+				user.setEmail(rs.getString("email_id"));
+			}
+		} catch (SQLException e) {
+			// e.printStackTrace();
+			throw new DBException("Unable to login", e);
+		} finally {
+			ConnectionUtil.close(con, pst, rs);
+		}
+
+		return user;
+	}
+
 
 	/**
 	 * method for donor register
@@ -211,8 +239,8 @@ public class UserDAOImpl implements UserDAO {
 				String requestType = rs.getString("request_type");
 				Date date = rs.getDate("date");
 				StringBuilder content = new StringBuilder();
-				content.append(" Id\tAmount\tRequest Type\t\n");
-				content.append(rs.getInt("donor_id")).append("\t");
+				content.append("Donor Id\tAmount\tRequest Type\t\n");
+				content.append(rs.getInt("donor_id")).append("\t\t");
 				content.append(rs.getString("amount")).append("\t");
 				content.append(rs.getString("request_type")).append("\t");
 				content.append("\n");
@@ -232,7 +260,7 @@ public class UserDAOImpl implements UserDAO {
 
 	private static void displayDonor(List<User> list) {
 		StringBuilder content = new StringBuilder();
-		content.append(" Id\tName\tEmail\t\n");
+		content.append("Donor Id\tName\tEmail\t\n");
 		for (User user : list) {
 			content.append(user.getId()).append("\t");
 			content.append(user.getName()).append("\t");

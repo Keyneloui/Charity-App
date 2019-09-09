@@ -13,6 +13,8 @@ public interface UserDAO {
 	User adminLogin(String emailIds, String passwords) throws DBException;
 
 	User donorLogin(String emailId, String password) throws DBException;
+	
+	User donor(int id) throws DBException;
 
 	List<User> findAll() throws DBException;
 

@@ -5,7 +5,6 @@ public class User {
 	private String name;
 	private String email;
 	private String password;
-	
 
 	@Override
 	public String toString() {
@@ -44,5 +43,4 @@ public class User {
 		this.password = password;
 	}
 
-	
 }

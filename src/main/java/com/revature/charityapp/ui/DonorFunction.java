@@ -13,7 +13,9 @@ import com.revature.charityapp.dao.UserDAOImpl;
 import com.revature.charityapp.exception.DBException;
 import com.revature.charityapp.exception.ValidatorException;
 import com.revature.charityapp.model.DonationRequest;
+import com.revature.charityapp.model.User;
 import com.revature.charityapp.util.ConnectionUtil;
+import com.revature.charityapp.util.DisplayUtil;
 
 public class DonorFunction {
 	/**
@@ -74,7 +76,6 @@ public class DonorFunction {
 	public static void donationRequest() throws DBException, ValidatorException, SQLException
 
 	{
-		Connection con = ConnectionUtil.getConnection();
 
 		DonationDAO dao = new DonationDAOImpl();
 		UserDAO udao = new UserDAOImpl();
@@ -93,6 +94,13 @@ public class DonorFunction {
 		if (str.equalsIgnoreCase("yes")) {
 			System.out.println("Enter Your donor id:");
 			int donorId = scn.nextInt();
+			User user=new User();
+			user.setId(donorId);
+			user=udao.donor(donorId);
+			if(user==null) {
+				System.out.println("Donor ID doesn't exist");
+				donationRequest();
+			}
 			System.out.println("Enter request type:");
 			String requestType = scn.next();
 
@@ -106,7 +114,7 @@ public class DonorFunction {
 				System.out.println("Enter the amount you want to contribute:");
 				double amount = scn.nextDouble();
 				System.out.println("Payment\nEnter your accountNo:");
-				long accountno = scn.nextLong();
+				String accountno = scn.next();
 				System.out.println("Payment Success");
 				double requestAmount = amount;
 				drr.setRequestAmount(requestAmount);
@@ -115,7 +123,7 @@ public class DonorFunction {
 				udao.donorActivity(donorId, amount, requestType, date);
 				operations();
 			}
-		} else if (str.equals("No")) {
+		} else if (str.equalsIgnoreCase("No")) {
 			System.out.println("ThanK You");
 		} else {
 			System.out.println("Thank You");
@@ -124,8 +132,6 @@ public class DonorFunction {
 			Signin.welcomePage();
 		} catch (ValidatorException e) {
 			System.out.println(e.getMessage());
-		} finally {
-			ConnectionUtil.close(con, scn);
 		}
 
 	}
