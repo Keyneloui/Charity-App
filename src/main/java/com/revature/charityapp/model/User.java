@@ -5,12 +5,11 @@ public class User {
 	private String name;
 	private String email;
 	private String password;
-	private String role;
+	
 
 	@Override
 	public String toString() {
-		return "Donor :id=" + donorId + ", name=" + name + ", email=" + email + ", password=" + password + ", role="
-				+ role + ".";
+		return "Donor :Id=" + donorId + ", Name=" + name + ", Email=" + email + ", Password=" + password + ".";
 	}
 
 	public int getId() {
@@ -45,12 +44,5 @@ public class User {
 		this.password = password;
 	}
 
-	public String getRole() {
-		return role;
-	}
-
-	public void setRole(String role) {
-		this.role = role;
-	}
-
+	
 }

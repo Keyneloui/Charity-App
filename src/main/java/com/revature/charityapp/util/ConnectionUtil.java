@@ -48,12 +48,13 @@ public class ConnectionUtil {
 
 	public static void close(Connection con, PreparedStatement pst, ResultSet rs) {
 		try {
+			if (rs != null)
+				rs.close();
 			if (pst != null)
 				pst.close();
 			if (con != null)
 				con.close();
-			if (rs != null)
-				rs.close();
+
 		} catch (Exception e) {
 
 		}

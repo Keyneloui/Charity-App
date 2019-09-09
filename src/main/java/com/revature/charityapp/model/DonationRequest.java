@@ -1,17 +1,20 @@
 package com.revature.charityapp.model;
 
+import java.sql.Date;
+
 public class DonationRequest {
-	private int requestId;
+	private int id;
 	private String requestType;
 	private Double requestAmount;
-	private Boolean active;
+	private Date date;
+	
 
 	public int getRequestId() {
-		return requestId;
+		return id;
 	}
 
 	public void setRequestId(int requestId) {
-		this.requestId = requestId;
+		this.id = requestId;
 	}
 
 	public String getRequestType() {
@@ -29,19 +32,19 @@ public class DonationRequest {
 	public void setRequestAmount(Double requestAmount) {
 		this.requestAmount = requestAmount;
 	}
-
-	public Boolean getActive() {
-		return active;
+	public Date getDate() {
+		return date;
 	}
 
-	public void setActive(Boolean active) {
-		this.active = active;
+	public void setDate(Date date) {
+		this.date = date;
 	}
 
+	
 	@Override
 	public String toString() {
-		return "DonationRequest :requestId=" + requestId + ", requestType=" + requestType + ", requestAmount="
-				+ requestAmount + ", active=" + active + ".";
+		return "DonationRequest :Request Id=" + id + ", Request Type=" + requestType + ", Request Amount="
+				+ requestAmount + "Date="+date+".";
 	}
 
 }

@@ -2,30 +2,39 @@ package com.revature.charityapp.validator;
 
 import com.revature.charityapp.exception.ValidatorException;
 import com.revature.charityapp.model.User;
+import com.revature.charityapp.ui.Signin;
 
 public class UserValidator {
 	public void validateBeforeRegistration(User user) throws ValidatorException {
+		
+		rejectIfInvalidNumber(user.getId(), "Invalid id");
 
-		int donorId = user.getId();
-		if (donorId == 0) {
-			throw new ValidatorException("Invalid DonorId");
+		rejectIfInvalidString(user.getName(), "Invalid Name");
+
+		rejectIfInvalidString(user.getEmail(), "Invalid email");
+
+		rejectIfInvalidString(user.getPassword(), "Invalid Password");
+
+	}
+
+	public void rejectIfInvalidString(String input, String message) throws ValidatorException {
+		if (isInvalidString(input)) {
+			throw new ValidatorException(message);
 		}
-		String name = user.getName();
-		if (name == null || "".equals(name.trim())) {
-			throw new ValidatorException("Invalid Name");
-		}
-		String email = user.getEmail();
-		if (email == null || "".equals(email.trim())) {
-			throw new ValidatorException("Invalid Email");
-		}
-		String password = user.getPassword();
-		if (password == null || "".equals(password.trim())) {
-			throw new ValidatorException("Invalid password");
-		}
-		String role = user.getRole();
-		if (role == null || "".equals(role.trim())) {
-			throw new ValidatorException("Invalid password");
+	}
+
+	public void rejectIfInvalidNumber(int input, String message) throws ValidatorException {
+		if (isInvalidNumber(input)) {
+			throw new ValidatorException(message);
 		}
 
+	}
+
+	private boolean isInvalidNumber(int input) {
+		return input == 0;
+	}
+
+	private boolean isInvalidString(String name) {
+		return name == null || "".equals(name.trim());
 	}
 }

@@ -1,5 +1,6 @@
 package com.revature.charityapp.dao;
 
+import java.sql.Date;
 import java.util.List;
 
 import com.revature.charityapp.exception.DBException;
@@ -15,7 +16,7 @@ public interface UserDAO {
 
 	List<User> findAll() throws DBException;
 
-	void donorActivity(String emailId, double amount, String requestType) throws DBException;
+	void donorActivity(int donorId, double amount, String requestType, Date date) throws DBException;
 
 	void displayActivity() throws DBException;
 

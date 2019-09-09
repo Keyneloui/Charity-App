@@ -1,17 +1,15 @@
 package com.revature.charityapp.ui;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Scanner;
 
-import com.revature.charityapp.dao.DonationDAOimpl;
+import com.revature.charityapp.dao.DonationDAOImpl;
 import com.revature.charityapp.dao.DonationDAO;
-import com.revature.charityapp.dao.UserDAO;
-import com.revature.charityapp.dao.UserDAOimpl;
 import com.revature.charityapp.exception.DBException;
 import com.revature.charityapp.exception.ValidatorException;
 import com.revature.charityapp.model.DonationRequest;
-import com.revature.charityapp.model.User;
 import com.revature.charityapp.util.ConnectionUtil;
 
 public class AdminFunction {
@@ -32,25 +30,27 @@ public class AdminFunction {
 		switch (num1) {
 		case 1:
 			System.out.println("Donation Requests");
-			donationRequest();
+			donationRequest(scn);
 			operations();
 			break;
 		case 2:
 			System.out.println("Donor Details");
-			donorDetails();
+			DisplayUtil.donorDetails();
 			operations();
 			break;
 		case 3:
 			System.out.println("Donor Activity");
-			donorActivity();
+			DisplayUtil.donorActivity();
 			operations();
 		case 4:
 			System.out.println("Thank You");
 			try {
 				Signin.welcomePage();
 			} catch (ValidatorException e) {
-				e.printStackTrace();
+				System.out.println(e.getMessage());
 				throw new ValidatorException("Unable to process the request", e);
+			} catch (SQLException e) {
+				System.out.println(e.getMessage());
 			} finally {
 				ConnectionUtil.close(con, scn);
 			}
@@ -64,23 +64,19 @@ public class AdminFunction {
 	 * @throws DBException
 	 **/
 
-	public static void donationRequest() throws DBException
+	public static void donationRequest(Scanner scn) throws DBException
 
 	{
-		Connection con = ConnectionUtil.getConnection();
-		Scanner scn = new Scanner(System.in);
+		
 
-		DonationDAO dao = new DonationDAOimpl();
+		DonationDAO dao = new DonationDAOImpl();
 		try {
 			List<DonationRequest> list = dao.findAll();
-			for (DonationRequest dr : list) {
+			DisplayUtil.display(list);
 
-				System.out.println(dr);
-			}
-
-			System.out.println("--------Do you wish to ADD/UPDATE any request:-------");
+			System.out.println("--------Do you wish to ADD/UPDATE/CLOSE any request:-------");
 			String str = scn.next();
-			if (str.equals("ADD")) {
+			if (str.equalsIgnoreCase("ADD")) {
 				System.out.println("Enter request id:");
 				int requestId = scn.nextInt();
 				System.out.println("Enter you request type:");
@@ -92,59 +88,27 @@ public class AdminFunction {
 				dr.setRequestType(requestType);
 				dr.setRequestAmount(requestAmount);
 				dao.addDonations(dr);
-			} else if (str.equals("UPDATE")) {
+			} else if (str.equalsIgnoreCase("UPDATE")) {
 				System.out.println("Enter request type:");
 				String requestType = scn.next();
-				System.out.println("Enter the updated amount:");
+				System.out.println("Enter the amount you want to add:");
 				double requestAmount = scn.nextDouble();
 				DonationRequest drr = new DonationRequest();
 				drr.setRequestType(requestType);
 				drr.setRequestAmount(requestAmount);
-				dao.updateDonations(drr);
+				dao.updateDonationss(drr);
+			} else if (str.equalsIgnoreCase("DELETE")) {
+				System.out.println("Enter request type:");
+				String requestType = scn.next();
+				DonationRequest drr = new DonationRequest();
+				drr.setRequestType(requestType);
+				dao.deleteDonation(drr);
 			} else
-				System.out.println("Invalids");
+				System.out.println("Thank You");
 		} catch (DBException e) {
-			e.printStackTrace();
+			System.out.println(e.getMessage());
 			throw new DBException("Unable to process the request", e);
-		} finally {
-			ConnectionUtil.close(con, scn);
-		}
-	}
-
-	/**
-	 * View Donor Details
-	 * 
-	 * @throws DBException
-	 **/
-	public static void donorDetails() throws DBException {
-		UserDAO iudao = new UserDAOimpl();
-		try {
-			List<User> list = iudao.findAll();
-			for (User user : list) {
-
-				System.out.println(user);
-			}
-		} catch (DBException e) {
-			e.printStackTrace();
-			throw new DBException("Unable to process the request", e);
-		}
-
-	}
-
-	/**
-	 * View Donor Activity
-	 * 
-	 * @throws DBException
-	 **/
-	public static void donorActivity() throws DBException {
-		UserDAO udao = new UserDAOimpl();
-		try {
-			udao.displayActivity();
-		} catch (DBException e) {
-			e.printStackTrace();
-			throw new DBException("Unable to process the request", e);
-
-		}
+		} 
 	}
 
 }

@@ -1,22 +1,27 @@
 package com.revature.charityapp.ui;
 
 import java.sql.Connection;
+import java.sql.Date;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Scanner;
 
-import com.revature.charityapp.dao.DonationDAOimpl;
+import com.revature.charityapp.dao.DonationDAOImpl;
 import com.revature.charityapp.dao.DonationDAO;
 import com.revature.charityapp.dao.UserDAO;
-import com.revature.charityapp.dao.UserDAOimpl;
+import com.revature.charityapp.dao.UserDAOImpl;
 import com.revature.charityapp.exception.DBException;
 import com.revature.charityapp.exception.ValidatorException;
 import com.revature.charityapp.model.DonationRequest;
 import com.revature.charityapp.util.ConnectionUtil;
 
 public class DonorFunction {
-	/**Donor functions
+	/**
+	 * Donor functions
+	 * 
 	 * @throws DBException
-	 * @throws ValidatorException**/
+	 * @throws ValidatorException
+	 **/
 
 	public static void operations() throws DBException, ValidatorException {
 		Connection con = ConnectionUtil.getConnection();
@@ -29,7 +34,12 @@ public class DonorFunction {
 		switch (num1) {
 		case 1:
 			System.out.println("Donation Requests");
-			donationRequest();
+			try {
+				donationRequest();
+				operations();
+			} catch (SQLException e1) {
+				System.out.println(e1.getMessage());
+			}
 
 			break;
 		case 2:
@@ -37,80 +47,87 @@ public class DonorFunction {
 			try {
 				Signin.welcomePage();
 			} catch (ValidatorException e) {
-				e.printStackTrace();
-				throw new ValidatorException("Unable to process the request", e);
+				System.out.println(e.getMessage());
+
+				// throw new ValidatorException("Unable to process the request", e);
+			} catch (SQLException e) {
+				System.out.println(e.getMessage());
+
 			} finally {
 				ConnectionUtil.close(con, scn);
 				;
 			}
 			break;
 		default:
-			System.out.println("Invalids");
+			System.out.println("Wrong Choice");
 		}
 
 	}
+
 	/**
 	 * View Donation Request
+	 * 
 	 * @throws DBException
 	 * @throws ValidatorException
 	 */
 
-	public static void donationRequest() throws DBException, ValidatorException
+	public static void donationRequest() throws DBException, ValidatorException, SQLException
 
 	{
 		Connection con = ConnectionUtil.getConnection();
 
-		DonationDAO obj = new DonationDAOimpl();
-		UserDAO ob = new UserDAOimpl();
+		DonationDAO dao = new DonationDAOImpl();
+		UserDAO udao = new UserDAOImpl();
 		try {
 
-			List<DonationRequest> list = obj.findAll();
-			for (DonationRequest dr : list) {
-
-				System.out.println(dr);
-			}
+			List<DonationRequest> list = dao.findAll();
+			DisplayUtil.display(list);
 		} catch (DBException e) {
-			e.printStackTrace();
-			throw new DBException("Unable to process the request",e);
+			System.out.println(e.getMessage());
+			throw new DBException("Unable to process the request", e);
 		}
 		Scanner scn = new Scanner(System.in);
 		System.out.println("--------Do you wish to Contribute for our requests:Yes/No-------");
 		String str = scn.next();
-		if (str.equals("Yes")) {
-			System.out.println("Enter Your email_id:");
-			String emailId = scn.next();
+		DonationRequest drr = new DonationRequest();
+		if (str.equalsIgnoreCase("yes")) {
+			System.out.println("Enter Your donor id:");
+			int donorId = scn.nextInt();
 			System.out.println("Enter request type:");
 			String requestType = scn.next();
-			DonationRequest drr = new DonationRequest();
-			drr.setRequestType(requestType);
-			obj.findByRequestType(requestType);
-			System.out.println("Enter the amount you want to contribute:");
-			double amount = scn.nextDouble();
-			System.out.println("Payment\nEnter your accountNo:");
-			@SuppressWarnings("unused")
-			long accountno = scn.nextLong();
-			System.out.println("Payment Success");
-			double requestAmount = amount;
-			drr.setRequestAmount(requestAmount);
-			obj.updateDonations(drr);
-			ob.donorActivity(emailId, amount, requestType);
-			operations();
-		} else if(str.equals("No")){
-			System.out.println("ThanK You");
-		}
-			else
-			{
-				System.out.println("Invalid");
-			}
-			try {
-				Signin.welcomePage();
-			} catch (ValidatorException e) {
-				e.printStackTrace();
-			} finally {
-				ConnectionUtil.close(con, scn);
-			}
 
+			drr.setRequestType(requestType);
+
+			drr = dao.findByRequestType(requestType);
+			if (drr == null) {
+				System.out.println("Invalid Request Type");
+				donationRequest();
+			} else {
+				System.out.println("Enter the amount you want to contribute:");
+				double amount = scn.nextDouble();
+				System.out.println("Payment\nEnter your accountNo:");
+				long accountno = scn.nextLong();
+				System.out.println("Payment Success");
+				double requestAmount = amount;
+				drr.setRequestAmount(requestAmount);
+				dao.updateDonations(drr);
+				Date date = null;
+				udao.donorActivity(donorId, amount, requestType, date);
+				operations();
+			}
+		} else if (str.equals("No")) {
+			System.out.println("ThanK You");
+		} else {
+			System.out.println("Thank You");
 		}
+		try {
+			Signin.welcomePage();
+		} catch (ValidatorException e) {
+			System.out.println(e.getMessage());
+		} finally {
+			ConnectionUtil.close(con, scn);
+		}
+
 	}
 
-
+}

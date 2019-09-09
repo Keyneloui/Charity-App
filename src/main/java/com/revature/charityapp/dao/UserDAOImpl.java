@@ -1,6 +1,7 @@
 package com.revature.charityapp.dao;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -11,7 +12,7 @@ import com.revature.charityapp.exception.DBException;
 import com.revature.charityapp.model.User;
 import com.revature.charityapp.util.ConnectionUtil;
 
-public class UserDAOimpl implements UserDAO {
+public class UserDAOImpl implements UserDAO {
 	/**
 	 * method for donor login
 	 * 
@@ -25,7 +26,7 @@ public class UserDAOimpl implements UserDAO {
 
 		try {
 			con = ConnectionUtil.getConnection();
-			String sql = "select donor_id,name,email_id,role from donor where email_id = ? and password = ?";
+			String sql = "select donor_id,name,email_id from donor where email_id = ? and password = ?";
 			pst = con.prepareStatement(sql);
 			pst.setString(1, email);
 			pst.setString(2, password);
@@ -35,11 +36,9 @@ public class UserDAOimpl implements UserDAO {
 				user.setId(rs.getInt("donor_id"));
 				user.setName(rs.getString("name"));
 				user.setEmail(rs.getString("email_id"));
-				user.setRole(rs.getString("role"));
-
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			// e.printStackTrace();
 			throw new DBException("Unable to login", e);
 		} finally {
 			ConnectionUtil.close(con, pst, rs);
@@ -58,7 +57,7 @@ public class UserDAOimpl implements UserDAO {
 
 		Connection con = null;
 		PreparedStatement pst = null;
-		String sql = "insert into donor(donor_id,name,email_id,password,role) values (?,?, ?,?,?)";
+		String sql = "insert into donor(donor_id,name,email_id,password) values (?,?,?,?)";
 
 		try {
 			con = ConnectionUtil.getConnection();
@@ -67,13 +66,12 @@ public class UserDAOimpl implements UserDAO {
 			pst.setString(2, user.getName());
 			pst.setString(3, user.getEmail());
 			pst.setString(4, user.getPassword());
-			pst.setString(5, user.getRole());
 
-			pst.executeUpdate();
+			int rows = pst.executeUpdate();
 			// System.out.println("No of rows inserted:" + rows);
 		} catch (SQLException e) {
-			e.printStackTrace();
-			throw new DBException("Unable to insert user", e);
+			// e.printStackTrace();
+			throw new DBException("Donor Id,Name already exists\nRegister with a new Donor Id and Name", e);
 		} finally {
 			ConnectionUtil.close(con, pst);
 		}
@@ -93,7 +91,7 @@ public class UserDAOimpl implements UserDAO {
 		User user = null;
 		try {
 			con = ConnectionUtil.getConnection();
-			String sql = "select admin_id,name,email_id,role from admin where email_id = ? and password = ?";
+			String sql = "select id,name,email from admin where email = ? and password = ?";
 			pst = con.prepareStatement(sql);
 			pst.setString(1, emailIds);
 			pst.setString(2, passwords);
@@ -104,7 +102,7 @@ public class UserDAOimpl implements UserDAO {
 			}
 
 		} catch (SQLException e) {
-			e.printStackTrace();
+			System.out.println(e.getMessage());
 			throw new DBException("Unable to login", e);
 		} finally {
 			ConnectionUtil.close(con, pst, rs);
@@ -125,7 +123,7 @@ public class UserDAOimpl implements UserDAO {
 		List<User> list = null;
 		try {
 			con = ConnectionUtil.getConnection();
-			String sql = "select donor_id,name,email_id,password,role from donor";
+			String sql = "select donor_id,name,email_id from donor";
 			pst = con.prepareStatement(sql);
 			rs = pst.executeQuery();
 			list = new ArrayList<User>();
@@ -136,7 +134,7 @@ public class UserDAOimpl implements UserDAO {
 			}
 
 		} catch (SQLException e) {
-			e.printStackTrace();
+			System.out.println(e.getMessage());
 			throw new DBException("Unable to list Donor", e);
 		} finally {
 			ConnectionUtil.close(con, pst, rs);
@@ -152,16 +150,12 @@ public class UserDAOimpl implements UserDAO {
 			Integer donorId = rs.getInt("donor_id");
 			String name = rs.getString("name");
 			String emailId = rs.getString("email_id");
-			String password = rs.getString("password");
-			String role = rs.getString("role");
 			user = new User();
 			user.setId(donorId);
 			user.setName(name);
 			user.setEmail(emailId);
-			user.setPassword(password);
-			user.setRole(role);
 		} catch (SQLException e) {
-			e.printStackTrace();
+			System.out.println(e.getMessage());
 			throw new DBException("Unable to display", e);
 		}
 		return user;
@@ -173,20 +167,21 @@ public class UserDAOimpl implements UserDAO {
 	 * @throws DBException
 	 **/
 
-	public void donorActivity(String emailId, double amount, String requestType) throws DBException {
+	public void donorActivity(int donorId, double amount, String requestType, Date date) throws DBException {
 		Connection con = null;
 		PreparedStatement pst = null;
 		try {
 			con = ConnectionUtil.getConnection();
-			String sql = "insert into activity(email_id,amount,request_type) values ( ?,?,?)";
+			String sql = "insert into activity(donor_id,amount,request_type,date) values ( ?,?,?,?)";
 			pst = con.prepareStatement(sql);
-			pst.setString(1, emailId);
+			pst.setInt(1, donorId);
 			pst.setDouble(2, amount);
 			pst.setString(3, requestType);
+			pst.setDate(4, date);
 			pst.executeUpdate();
 			// System.out.println("No of rows inserted:" + rows);
 		} catch (SQLException e) {
-			e.printStackTrace();
+			System.out.println(e.getMessage());
 			throw new DBException("Unable to display the donor activity", e);
 
 		} finally {
@@ -206,24 +201,45 @@ public class UserDAOimpl implements UserDAO {
 		ResultSet rs = null;
 		try {
 			con = ConnectionUtil.getConnection();
-			String sql1 = "select email_id,amount,request_type from activity ";
+			String sql1 = "select donor_id,amount,request_type,date from activity ";
 			pst = con.prepareStatement(sql1);
 			rs = pst.executeQuery();
 			while (rs.next()) {
 
-				String emailId = rs.getString("email_id");
+				int donorId = rs.getInt("donor_id");
 				Double amount = rs.getDouble("amount");
 				String requestType = rs.getString("request_type");
-				System.out.println("Donor Email-" + emailId + ",Contributed Amount-" + amount + ",For the request type-"
-						+ requestType);
+				Date date = rs.getDate("date");
+				StringBuilder content = new StringBuilder();
+				content.append(" Id\tAmount\tRequest Type\t\n");
+				content.append(rs.getInt("donor_id")).append("\t");
+				content.append(rs.getString("amount")).append("\t");
+				content.append(rs.getString("request_type")).append("\t");
+				content.append("\n");
+				System.out.println(content);
+				// System.out.println("Donor Id-" + donorId + ",Contributed Amount-" + amount +
+				// ",For the request type-"
+				// + requestType+"on"+date);
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			System.out.println(e.getMessage());
 			throw new DBException("Unable to process your request", e);
 		} finally {
 			ConnectionUtil.close(con, pst, rs);
 		}
 
+	}
+
+	private static void displayDonor(List<User> list) {
+		StringBuilder content = new StringBuilder();
+		content.append(" Id\tName\tEmail\t\n");
+		for (User user : list) {
+			content.append(user.getId()).append("\t");
+			content.append(user.getName()).append("\t");
+			content.append(user.getEmail()).append("\t");
+			content.append("\n");
+		}
+		System.out.println(content);
 	}
 
 }
