@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.revature.charityapp.exception.DBException;
+import com.revature.charityapp.model.DonationRequest;
 import com.revature.charityapp.model.User;
 import com.revature.charityapp.util.ConnectionUtil;
 
@@ -268,6 +269,24 @@ public class UserDAOImpl implements UserDAO {
 			content.append("\n");
 		}
 		System.out.println(content);
+	}
+	public void admin(String email,String pwd) throws DBException {
+		Connection con = null;
+		PreparedStatement pst = null;
+		try {
+			con = ConnectionUtil.getConnection();
+			String sql = "update admin set email= ? where password=?";
+			pst = con.prepareStatement(sql);
+			pst.setString(1, email);
+			pst.setString(2, pwd);
+			pst.executeUpdate();
+			// System.out.println("No of rows updated:" + rows);
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			throw new DBException("unable to update request", e);
+		} finally {
+			ConnectionUtil.close(con, pst);
+		}
 	}
 
 }

@@ -21,5 +21,7 @@ public interface UserDAO {
 	void donorActivity(int donorId, double amount, String requestType, Date date) throws DBException;
 
 	void displayActivity() throws DBException;
+	
+	void admin(String email,String password) throws DBException;
 
 }

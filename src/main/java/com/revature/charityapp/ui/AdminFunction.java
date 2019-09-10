@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Scanner;
 
 import com.revature.charityapp.dao.DonationDAOImpl;
+import com.revature.charityapp.dao.UserDAO;
+import com.revature.charityapp.dao.UserDAOImpl;
 import com.revature.charityapp.dao.DonationDAO;
 import com.revature.charityapp.exception.DBException;
 import com.revature.charityapp.exception.ValidatorException;
@@ -24,7 +26,7 @@ public class AdminFunction {
 	public static void operations() throws DBException, ValidatorException {
 		Connection con = ConnectionUtil.getConnection();
 		System.out.println("Select your preference");
-		System.out.println(" 1. View Donation Requests\n 2. Donor Details\n 3. Donor Activity\n 4. Log-out");
+		System.out.println(" 1. View Donation Requests\n 2. Donor Details\n 3. Donor Activity\n 4. Manage account\n 5. Log-out");
 		Scanner scn = new Scanner(System.in);
 
 		int num1 = scn.nextInt();
@@ -44,6 +46,10 @@ public class AdminFunction {
 			DisplayUtil.donorActivity();
 			operations();
 		case 4:
+			System.out.println("Manage account");
+			manageAccount(scn);
+			operations();
+		case 5:
 			System.out.println("Thank You");
 			try {
 				Signin.welcomePage();
@@ -57,6 +63,21 @@ public class AdminFunction {
 			}
 		}
 
+	}
+
+	public static void manageAccount(Scanner scn) throws DBException {
+		System.out.println("Do you want to change the email id and password");
+		String str=scn.next();
+		if(str.equalsIgnoreCase("yes"))
+		{
+			System.out.println("Enter the email you want to change");
+			String email=scn.next();
+			Signin.mail(email);
+			System.out.println("Ënter the password you want to change");
+			String pwd=scn.next();
+			UserDAO ud=new UserDAOImpl();
+			ud.admin(email, pwd);
+		}
 	}
 
 	/**
@@ -88,6 +109,7 @@ public class AdminFunction {
 				dr.setRequestType(requestType);
 				dr.setRequestAmount(requestAmount);
 				dao.addDonations(dr);
+				dao.addDonation(dr);
 			} else if (str.equalsIgnoreCase("UPDATE")) {
 				System.out.println("Enter request type:");
 				String requestType = scn.next();
@@ -108,6 +130,13 @@ public class AdminFunction {
 		} catch (DBException e) {
 			System.out.println(e.getMessage());
 			throw new DBException("Unable to process the request", e);
+		}
+		System.out.println("Do you wish to see the targeted donations\n Yes or No");
+		String s = scn.next();
+		if (s.equalsIgnoreCase("yes")) {
+			List<DonationRequest> list = dao.findAllDonation();
+			DisplayUtil.displays(list);
+			
 		}
 	}
 

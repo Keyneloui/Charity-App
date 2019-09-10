@@ -1,6 +1,5 @@
 package com.revature.charityapp.dao;
 
-import java.sql.SQLException;
 import java.util.List;
 
 import com.revature.charityapp.exception.DBException;
@@ -8,8 +7,12 @@ import com.revature.charityapp.model.DonationRequest;
 
 public interface DonationDAO {
 	List<DonationRequest> findAll() throws DBException;
+	
+	List<DonationRequest> findAllDonation() throws DBException;
 
 	void addDonations(DonationRequest dr) throws DBException;
+	
+	void addDonation(DonationRequest dr) throws DBException;
 
 	void updateDonations(DonationRequest drr) throws DBException;
 

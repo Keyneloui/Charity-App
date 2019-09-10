@@ -17,7 +17,20 @@ public class DisplayUtil {
 			content.append(dr.getRequestId()).append("\t\t");
 			content.append(dr.getRequestType()).append("\t\t");
 			content.append(dr.getRequestAmount()).append("\t\t");
-		
+
+			content.append("\n");
+		}
+
+		System.out.println(content);
+	}
+
+	public static void displays(List<DonationRequest> list) {
+		StringBuilder content = new StringBuilder();
+		content.append("Request Type\tRequest Amount\n");
+		for (DonationRequest dr : list) {
+			content.append(dr.getRequestType()).append("\t\t");
+			content.append(dr.getRequestAmount()).append("\t");
+
 			content.append("\n");
 		}
 

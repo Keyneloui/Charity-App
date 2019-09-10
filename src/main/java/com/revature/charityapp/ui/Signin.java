@@ -32,7 +32,6 @@ public class Signin {
 			System.out.println("1.  Donor Register ");
 			System.out.println("2.  Donor Log-in ...");
 			System.out.println("3.  Admin Log-in...");
-			System.out.println("4.  Exit...");
 			System.out.println("Enter Your Choice :");
 			int val = sc.nextInt();
 			UserValidator uv = new UserValidator();
@@ -112,9 +111,6 @@ public class Signin {
 					AdminFunction.operations();
 				}
 				break;
-			case 4:
-				System.out.println("Thank You");
-				break;
 			default:
 				System.out.println("Wrong Choice");
 				welcomePage();
@@ -141,7 +137,7 @@ public class Signin {
 		String email = emailIds;
 		do {
 			if (status != null && !status.equals("")) {
-				System.out.println("Enter your  registered email:");
+				System.out.println("Re-enter the email:");
 				email = sc.next();
 			}
 			Matcher matcher = pattern.matcher(email);
@@ -169,7 +165,7 @@ public class Signin {
 		String name = names;
 		do {
 			if (status != null && !status.equals("")) {
-				System.out.println("Enter your Name:");
+				System.out.println("Re-enter your Name:");
 				name = sc.next();
 			}
 			Matcher matcher = pattern.matcher(name);
