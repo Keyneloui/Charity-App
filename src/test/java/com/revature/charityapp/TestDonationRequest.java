@@ -11,7 +11,7 @@ import com.revature.charityapp.model.DonationRequest;
 
 public class TestDonationRequest {
 
-	@Test
+	//@Test
 	public void DonationRequesttest() throws DBException {
 
 		DonationRequest request = new DonationRequest();

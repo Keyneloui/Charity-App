@@ -9,7 +9,7 @@ import com.revature.charityapp.model.User;
 
 public class TestDonorLogin {
 
-	@Test
+	//@Test
 	public void test() throws DBException {
 
 		String email = "a@gmail.com";

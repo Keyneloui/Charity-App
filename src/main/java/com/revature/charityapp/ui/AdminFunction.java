@@ -89,8 +89,8 @@ public class AdminFunction {
 	public static void donationRequest(Scanner scn) throws DBException
 
 	{
-
 		DonationDAO dao = new DonationDAOImpl();
+
 		try {
 			List<DonationRequest> list = dao.findAll();
 			DisplayUtil.display(list);
@@ -108,6 +108,7 @@ public class AdminFunction {
 				dr.setRequestId(requestId);
 				dr.setRequestType(requestType);
 				dr.setRequestAmount(requestAmount);
+				
 				dao.addDonations(dr);
 				dao.addDonation(dr);
 			} else if (str.equalsIgnoreCase("UPDATE")) {

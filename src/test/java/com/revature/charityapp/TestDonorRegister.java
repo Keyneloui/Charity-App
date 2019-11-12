@@ -9,7 +9,7 @@ import com.revature.charityapp.model.User;
 
 public class TestDonorRegister {
 
-	@Test
+	//@Test
 	public void Donortest() throws DBException {
 		User user = new User();
 		user.setId(900);

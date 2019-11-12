@@ -53,12 +53,15 @@ public class Signin {
 
 				System.out.println("Setup a password:");
 				String setpassword = sc.next();
-
+				
 				user.setId(donorId);
 				user.setName(name);
 				user.setEmail(emailId1);
 				user.setPassword(setpassword);
 				try {
+					user.setName(name);
+					user.setEmail(emailId1);
+					user.setPassword(setpassword);
 					uv.validateBeforeRegistration(user);
 
 					UserDAO ob = new UserDAOImpl();

@@ -9,9 +9,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.revature.charityapp.exception.DBException;
-import com.revature.charityapp.model.DonationRequest;
 import com.revature.charityapp.model.User;
 import com.revature.charityapp.util.ConnectionUtil;
+
+
 
 public class UserDAOImpl implements UserDAO {
 	/**
@@ -39,7 +40,7 @@ public class UserDAOImpl implements UserDAO {
 				user.setEmail(rs.getString("email_id"));
 			}
 		} catch (SQLException e) {
-			// e.printStackTrace();
+			
 			throw new DBException("Unable to login", e);
 		} finally {
 			ConnectionUtil.close(con, pst, rs);
@@ -96,8 +97,6 @@ public class UserDAOImpl implements UserDAO {
 			pst.setString(3, user.getEmail());
 			pst.setString(4, user.getPassword());
 
-			int rows = pst.executeUpdate();
-			// System.out.println("No of rows inserted:" + rows);
 		} catch (SQLException e) {
 			// e.printStackTrace();
 			throw new DBException("Donor Id,Name already exists\nRegister with a new Donor Id and Name", e);
@@ -230,18 +229,18 @@ public class UserDAOImpl implements UserDAO {
 		ResultSet rs = null;
 		try {
 			con = ConnectionUtil.getConnection();
-			String sql1 = "select donor_id,amount,request_type,date from activity ";
+			String sql1 = "select email_id,amount,request_type from activity ";
 			pst = con.prepareStatement(sql1);
 			rs = pst.executeQuery();
 			while (rs.next()) {
 
-				int donorId = rs.getInt("donor_id");
+				String donorId = rs.getString("email_id");
 				Double amount = rs.getDouble("amount");
 				String requestType = rs.getString("request_type");
 				Date date = rs.getDate("date");
 				StringBuilder content = new StringBuilder();
-				content.append("Donor Id\tAmount\tRequest Type\t\n");
-				content.append(rs.getInt("donor_id")).append("\t\t");
+				content.append("Email Id\tAmount\tRequest Type\t\n");
+				content.append(rs.getInt("email_id")).append("\t\t");
 				content.append(rs.getString("amount")).append("\t");
 				content.append(rs.getString("request_type")).append("\t");
 				content.append("\n");
